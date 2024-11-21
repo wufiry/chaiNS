@@ -13,7 +13,7 @@ chaiNS is a V2Ray && XRay client supporting global transparent proxy on Linux an
 /usr/bin
 ```
 ``sh
-cp ~/Downloads/chains /usr/local/bin 
+cp ~/Downloads/chaiNS /usr/local/bin 
 ``
 
 After that, you need to create a folder in ~/ where the file will be transported [tconfig.json](https://github.com/wufiry/chains/blob/main/OpenRC/tconfig.json "Config v2ray & xray core")
