@@ -63,3 +63,15 @@ Restart=on-failure
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
+### Tested on ArtixLinux OpenRC & ArchLinux SystemD
+
+# Donate
+
+<p align="center">
+<img src="https://www.crypto-news.net/wp-content/uploads/2016/09/monero.png" alt="monero" width="300" height="158"/>
+</p>
+	
+ ### `46AEKHwWpS8cj1a5Q2sJ1ZSZ4YvmXYTkgEnnsbpeFjQZW8NQSZinASkKNwiBoX4SN3SadYLZjSEbeevnVefe696PEbJv5yU`
+
+ <p align="center">
+ <a href="https://imgbb.com/"><img src="https://i.ibb.co/QmjfP6H/photo-2024-11-21-22-45-13.jpg" alt="photo-2024-11-21-22-45-13" border="0"></a>
