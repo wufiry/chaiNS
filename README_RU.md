@@ -1,7 +1,7 @@
 # chaiNS
 [English](https://github.com/wufiry/chains/blob/main/README.md "Change Lang")
 
-chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами SS, SSR, Trojan, Tuic и Juicity.
+chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами SS, SSR, Trojan, Socks, Vless, Vmess и другие
 
 ## Установка
 ### OpenRC
