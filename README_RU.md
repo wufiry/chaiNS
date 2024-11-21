@@ -1,5 +1,5 @@
 # chaiNS
-[English](https://github.com/wufiry/chains/blob/main/README.md "Change Lang")
+[English](https://github.com/wufiry/chaiNS "Change Lang")
 
 chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
