@@ -16,7 +16,7 @@ A transparent proxy v2ray/xray chains client by ru osint team - tw
 cp ~/Downloads/chains /usr/local/bin 
 ``
 
-After that, you need to create a folder in ~/ where the file will be transported [tconfig.json](https://github.com/wufiry/chains/blob/main/tconfig.json "Config v2ray & xray core")
+After that, you need to create a folder in ~/ where the file will be transported [tconfig.json](https://github.com/wufiry/chains/blob/main/OpenRC/tconfig.json "Config v2ray & xray core")
 ### SystemD
 
 ## Daemons
