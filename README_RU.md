@@ -1,7 +1,7 @@
 # chaiNS
 [English](https://github.com/wufiry/chains/blob/main/README.md "Change Lang")
 
-chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами SS, SSR, Trojan, Socks, Vless, Vmess и другие
+chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
 ## Установка
 ### OpenRC
@@ -66,6 +66,9 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
+# Конфигурация чейнов
+[Документация по конфигурации](https://v2ray.com/ru/configuration/protocols "Выберите нужный протокол")
+
 ### Протестировано на ArtixLinux OpenRC & ArchLinux SystemD
 
 # Пожертвования
