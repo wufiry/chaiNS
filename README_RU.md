@@ -1,18 +1,18 @@
-# chains
+# chaiNS
 [English](https://github.com/wufiry/chains/blob/main/README.md "Change Lang")
 
-Клиент ТПрокси поддерживающий v2ray && xray ядра с чейнами от русской осинт команды - tw
+chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный прозрачный прокси на Linux и совместимый с протоколами SS, SSR, Trojan, Tuic и Juicity.
 
 ## Установка
 ### OpenRC
-> [chains](https://github.com/wufiry/chains/blob/main/OpenRC/chains "Файл программы")
->> Файл chains требуется скопировать в 
+> [chaiNS](https://github.com/wufiry/chains/blob/main/OpenRC/chaiNS "Файл программы")
+>> Файл chaiNS требуется скопировать в 
 ```sh
 /usr/local/bin \
 /usr/bin
 ```
 ``sh
-cp ~/Downloads/chains /usr/local/bin 
+cp ~/Downloads/chaiNS /usr/local/bin 
 ``
 
 После чего, требуется создать папку в ~/ куда будет транспортирован файл [tconfig.json](https://github.com/wufiry/chains/blob/main/OpenRC/tconfig.json "Конфиг v2ray && xray core")
@@ -21,11 +21,11 @@ cp ~/Downloads/chains /usr/local/bin
 
 ## Daemons
 ### OpenRC 
-> chains.init
+> chaiNS.init
 ```sh
 #!/sbin/openrc-run
 
-name="chains"
+name="chaiNS"
 description="A transparent proxy v2ray/xray chains client by ru osint team - tw"
 command="/usr/local/bin/chains"
 pidfile="/run/${RC_SVCNAME}.pid"
@@ -39,11 +39,11 @@ rc_cgroup_cleanup="yes"
    }
 ```
 ```sh
-chmod +x chains
+chmod +x chaiNS
 rc-update add chains default
 ```
 ### SystemD
-> chains.service
+> chaiNS.service
 ```sh
 [Unit]
 Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
@@ -56,7 +56,7 @@ Type=simple
 User=root
 LimitNPROC=500
 LimitNOFILE=1000000
-ExecStart=/usr/local/bin/chains
+ExecStart=/usr/local/bin/chaiNS
 Restart=on-failure
 
 [Install]
@@ -64,9 +64,10 @@ WantedBy=multi-user.target
 ```
 ```sh
 systemctl daemon-reload
-systemctl enable --now chains
+systemctl enable --now chaiNS
 ```
 
 # Пожертвования
 
-### Monero XMR - []
+### Monero XMR - [XMR](46AEKHwWpS8cj1a5Q2sJ1ZSZ4YvmXYTkgEnnsbpeFjQZW8NQSZinASkKNwiBoX4SN3SadYLZjSEbeevnVefe696PEbJv5yU "46AEKHwWpS8cj1a5Q2sJ1ZSZ4YvmXYTkgEnnsbpeFjQZW8NQSZinASkKNwiBoX4SN3SadYLZjSEbeevnVefe696PEbJv5yU")
+
