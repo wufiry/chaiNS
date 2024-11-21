@@ -19,6 +19,7 @@ After that, you need to create a folder in ~/ where the file will be transported
 ### SystemD
 
 ## Daemons
+### Tested on ArtixLinux OpenRC & ArchLinux SystemD
 ### OpenRC 
 > chaiNS.init
 ```sh
@@ -64,9 +65,8 @@ systemctl enable --now chaiNS
 ```
 # Configuration chaines
 [V2Ray Configuration Guide](https://v2ray.com/en/configuration/protocols "Choose needed protocol")
-[XRay Configuration Guide](https://xtls.github.io/en/config/outbounds/blackhole.html "Look for the rest of the protocols in the tree on the left")
 
-### Tested on ArtixLinux OpenRC & ArchLinux SystemD
+[XRay Configuration Guide](https://xtls.github.io/en/config/outbounds/blackhole.html "Look for the rest of the protocols in the tree on the left")
 
 # Donate
 
