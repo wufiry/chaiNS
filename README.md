@@ -1,5 +1,5 @@
 # chaiNS
-[Русский](https://github.com/wufiry/chains/blob/main/README_RU.md "Сменить Язык")
+[Русский](https://github.com/wufiry/chaiNS/blob/main/README_RU.md "Сменить Язык")
 
 chaiNS is a V2Ray && XRay client supporting global transparent proxy on Linux and  it is compatible with Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
