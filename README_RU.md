@@ -20,6 +20,7 @@ cp ~/Downloads/chaiNS /usr/local/bin
 ### SystemD
 
 ## Daemons
+### Протестировано на ArtixLinux OpenRC & ArchLinux SystemD
 ### OpenRC 
 > chaiNS.init
 ```sh
@@ -69,8 +70,6 @@ systemctl enable --now chaiNS
 # Конфигурация чейнов
 [Документация по конфигурации V2Ray](https://v2ray.com/ru/configuration/protocols "Выберите нужный протокол")
 [Документация по конфигурации XRay](https://xtls.github.io/en/config/outbounds/blackhole.html "Остальные протоколы ищите в дереве слева")
-
-### Протестировано на ArtixLinux OpenRC & ArchLinux SystemD
 
 # Пожертвования
 
