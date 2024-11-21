@@ -15,7 +15,7 @@
 cp ~/Downloads/chains /usr/local/bin 
 ``
 
-После чего, требуется создать папку в ~/ куда будет транспортирован файл [tconfig.json](https://github.com/wufiry/chains/blob/main/tconfig.json "Конфиг v2ray && xray core")
+После чего, требуется создать папку в ~/ куда будет транспортирован файл [tconfig.json](https://github.com/wufiry/chains/blob/main/OpenRC/tconfig.json "Конфиг v2ray && xray core")
 
 ### SystemD
 
