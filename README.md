@@ -1,5 +1,5 @@
 # chains
-[Русский](https://github.com/wufiry/chains/blob/main/README_ru.md "Сменить Язык")
+[Русский](https://github.com/wufiry/chains/blob/main/README_RU.md "Сменить Язык")
 
 A transparent proxy v2ray/xray chains client by ru osint team - tw
 
