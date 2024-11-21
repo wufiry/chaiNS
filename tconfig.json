@@ -1,0 +1,67 @@
+{
+  "inbounds": [
+    {
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      }
+    }
+  ],
+  "outbounds": [
+      {
+    "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+    {
+            "address": "",
+            "method": "",
+            "ota": false,
+            "password": "",
+            "port":
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+             "mark": 255
+         }
+      },
+    "tag": "1",
+      "proxySettings": {
+          "tag": "2"  
+      }
+    },
+    {
+    "protocol": "socks",
+      "settings": {
+        "servers": [
+          {
+            "address": "",
+            "port": ,
+            "users": [
+              {
+                "user": "", 
+                "pass": ""
+               }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "tag": "2"
+    }
+  ]
+}
