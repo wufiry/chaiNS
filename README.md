@@ -40,7 +40,7 @@ rc_cgroup_cleanup="yes"
 ```
 ```sh
 chmod +x chaiNS
-rc-update add chains default
+rc-update add chaiNS default
 ```
 ### SystemD
 > chaiNS.service
