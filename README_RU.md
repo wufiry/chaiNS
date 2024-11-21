@@ -23,6 +23,7 @@ cp ~/Downloads/chaiNS /usr/local/bin
 ### Протестировано на ArtixLinux OpenRC & ArchLinux SystemD
 ### OpenRC 
 > chaiNS.init
+> > Необходимо удалить расширение файла сервиса OpenRC.
 ```sh
 #!/sbin/openrc-run
 
