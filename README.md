@@ -1,13 +1,13 @@
-# chains
+# chaiNS
 [Русский](https://github.com/wufiry/chains/blob/main/README_RU.md "Сменить Язык")
 
-A transparent proxy v2ray/xray chains client by ru osint team - tw
+chaiNS is a V2Ray && XRay client supporting global transparent proxy on Linux and  it is compatible with SS, SSR, Trojan, Tuic and Juicity protocols.
 
 
 ## Download
 ### OpenRC
-> [chains](https://github.com/wufiry/chains/blob/main/OpenRC/chains "Programm File")
->> The chains file needs to be copied to
+> [chaiNS](https://github.com/wufiry/chains/blob/main/OpenRC/chaiNS "Programm File")
+>> The chaiNS file needs to be copied to
 ```sh
 /usr/local/bin \
 /usr/bin
@@ -21,13 +21,13 @@ After that, you need to create a folder in ~/ where the file will be transported
 
 ## Daemons
 ### OpenRC 
-> chains.init
+> chaiNS.init
 ```sh
 #!/sbin/openrc-run
 
-name="chains"
+name="chaiNS"
 description="A transparent proxy v2ray/xray chains client by ru osint team - tw"
-command="/usr/local/bin/chains"
+command="/usr/local/bin/chaiNS"
 pidfile="/run/${RC_SVCNAME}.pid"
 command_background="yes"
 rc_ulimit="-n 30000"
@@ -39,11 +39,11 @@ rc_cgroup_cleanup="yes"
    }
 ```
 ```sh
-chmod +x chains
+chmod +x chaiNS
 rc-update add chains default
 ```
 ### SystemD
-> chains.service
+> chaiNS.service
 ```sh
 [Unit]
 Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
@@ -56,10 +56,10 @@ Type=simple
 User=root
 LimitNPROC=500
 LimitNOFILE=1000000
-ExecStart=/usr/local/bin/chains
+ExecStart=/usr/local/bin/chaiNS
 Restart=on-failure
 ```
 ```sh
 systemctl daemon-reload
-systemctl enable --now chains
+systemctl enable --now chaiNS
 ```
