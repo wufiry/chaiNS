@@ -22,7 +22,7 @@ After that, you need to create a folder in ~/ where the file will be transported
 ### Tested on ArtixLinux OpenRC & ArchLinux SystemD
 ### OpenRC 
 > chaiNS.init
-> > You must remove the OpenRC file extension.
+> > You must remove the OpenRC service file extension.
 ```sh
 #!/sbin/openrc-run
 
