@@ -11,7 +11,7 @@ chaiNS - это клиент V2Ray & XRay, поддерживающий глоб
 /usr/local/bin \
 /usr/bin
 ```
-``sh
+``
 cp ~/Downloads/chaiNS /usr/local/bin 
 ``
 
