@@ -1,11 +1,11 @@
 # chains
-[English](main/README.md)
+[English](https://github.com/wufiry/chains/blob/main/README.md "Change Lang")
 
 Клиент ТПрокси поддерживающий v2ray && xray ядра с чейнами от русской осинт команды - tw
 
 ## Установка
 ### OpenRC
-> [chains](https://github.com/wufiry/chains/blob/main/chains "Файл программы")
+> [chains](https://github.com/wufiry/chains/blob/main/OpenRC/chains "Файл программы")
 >> Файл chains требуется скопировать в 
 ```sh
 /usr/local/bin \
