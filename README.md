@@ -1,12 +1,12 @@
 # chains
-[Русский](main/README_RU.md)
+[Русский](https://github.com/wufiry/chains/blob/main/README_ru.md "Сменить Язык")
 
 A transparent proxy v2ray/xray chains client by ru osint team - tw
 
 
 ## Download
 ### OpenRC
-> [chains](https://github.com/wufiry/chains/blob/main/chains "Programm File")
+> [chains](https://github.com/wufiry/chains/blob/main/OpenRC/chains "Programm File")
 >> The chains file needs to be copied to
 ```sh
 /usr/local/bin \
