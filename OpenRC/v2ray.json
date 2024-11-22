@@ -1,26 +1,23 @@
 #!/bin/bash
 
-# Функция для обработки команд
 handle_commands() {
     case "$1" in
         -h|--help)
-            echo "Доступные команды:"
-            echo "  -h, --help       Выводит доступные команды"
-            echo "  -r, --restart    Перезапускает службу chaiNS"
+            echo "Available commands:"
+            echo "  -h, --help       Displays the available commands."
+            echo "  -r, --restart    Restarts the chaiNS daemon."
             ;;
         -r|--restart)
             sudo rc-service chaiNS restart 2>&1
             ;;
         *)
-            echo "Неизвестная команда. Используйте -h или --help для получения списка команд."
+            echo "Unknown command. Use -h or --help for a list of commands."
             return 1
             ;;
     esac
 }
 
-# Основной функционал
 main_functionality() {
-    # Здесь размещается основной функционал скрипта
     
     ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
@@ -45,14 +42,10 @@ iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
 
 v2ray run -c ~/OpenRC/tconfig.json
 
-    # Добавьте здесь код основного функционала
 }
 
-# Проверяем, передан ли аргумент
 if [ $# -gt 0 ]; then
-    # Если передан аргумент, обрабатываем команды
     handle_commands "$1" || exit 1
 else
-    # Если аргументы не переданы, выполняем основной функционал
     main_functionality
 fi
