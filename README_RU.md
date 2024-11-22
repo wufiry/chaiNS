@@ -49,7 +49,7 @@ rc-update add chaiNS default
 ```sh
 [Unit]
 Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
-Documentation=https://github.com/wufiry/chains
+Documentation=https://github.com/wufiry/chaiNS
 After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service
 Wants=network.target
 
