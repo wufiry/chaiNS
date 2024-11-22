@@ -6,17 +6,21 @@ handle_commands() {
         -h|--help)
             echo "Доступные команды:"
             echo "  -h, --help       Выводит доступные команды"
-            echo "  -r, --restart    Перезапускает службу chaiNS"
+            echo "  -r, --restart    Перезапускает запущенный процесс v2ray или xray"
             ;;
         -r|--restart)
-            if command -v systemctl &> /dev/null; then
-                echo "Перезапуск службы chaiNS с использованием systemd..."
-                sudo systemctl restart chaiNS 2>&1
-            elif command -v rc-service &> /dev/null; then
-                echo "Перезапуск службы chaiNS с использованием OpenRC..."
-                sudo rc-service chaiNS restart 2>&1
+            if pgrep -x "v2ray" > /dev/null; then
+                echo "Перезапуск v2ray..."
+                sudo killall v2ray  # Остановить все запущенные процессы v2ray
+                sleep 1  # Небольшая пауза, чтобы убедиться, что процесс остановлен
+                sudo /usr/local/bin/v2ray -c ~/chains/tconfig.json &  # Запустить v2ray в фоновом режиме
+            elif pgrep -x "xray" > /dev/null; then
+                echo "Перезапуск xray..."
+                sudo killall xray  # Остановить все запущенные процессы xray
+                sleep 1  # Небольшая пауза, чтобы убедиться, что процесс остановлен
+                sudo /usr/bin/xray -c ~/chains/tconfig.json &  # Запустить xray в фоновом режиме
             else
-                echo "Не удалось определить инициализационную систему."
+                echo "Ни v2ray, ни xray не запущены."
                 return 1
             fi
             ;;
@@ -26,6 +30,7 @@ handle_commands() {
             ;;
     esac
 }
+
 
 # Основной функционал
 main_functionality() {
