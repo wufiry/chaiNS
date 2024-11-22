@@ -43,7 +43,7 @@ iptables -t mangle -A OV2RAYUDP -d 192.168.0.0/16 -j RETURN
 iptables -t mangle -A OV2RAYUDP -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
 
-xray run -c ~/chaiNS/tconfig.json
+xray run -c ~/OpenRC/tconfig.json
 
     # Добавьте здесь код основного функционала
 }
