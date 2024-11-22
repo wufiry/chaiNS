@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Функция для обработки команд
+handle_commands() {
+    case "$1" in
+        -h|--help)
+            echo "Доступные команды:"
+            echo "  -h, --help       Выводит доступные команды"
+            echo "  -r, --restart    Перезапускает службу chaiNS"
+            ;;
+        -r|--restart)
+            sudo rc-service chaiNS restart 2>&1
+            ;;
+        *)
+            echo "Неизвестная команда. Используйте -h или --help для получения списка команд."
+            return 1
+            ;;
+    esac
+}
+
+# Основной функционал
+main_functionality() {
+    # Здесь размещается основной функционал скрипта
+    
+    ip rule add fwmark 1 table 100
+ip route add local 0.0.0.0/0 dev lo table 100
+
+iptables -t nat -N V2RAYTCP
+iptables -t nat -A V2RAYTCP -p tcp -j RETURN -m mark --mark 0xff
+iptables -t nat -A V2RAYTCP -p tcp -j REDIRECT --to-ports 12345
+iptables -t nat -A PREROUTING -p tcp -j V2RAYTCP
+iptables -t nat -A OUTPUT -p tcp -j V2RAYTCP
+
+iptables -t mangle -N PV2RAYUDP
+iptables -t mangle -A PV2RAYUDP -j RETURN -m mark --mark 0xff
+iptables -t mangle -A PV2RAYUDP -d 192.168.0.0/16 -j RETURN
+iptables -t mangle -A PV2RAYUDP -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A PREROUTING -p udp -j PV2RAYUDP
+
+iptables -t mangle -N OV2RAYUDP
+iptables -t mangle -A OV2RAYUDP -j RETURN -m mark --mark 0xff
+iptables -t mangle -A OV2RAYUDP -d 192.168.0.0/16 -j RETURN
+iptables -t mangle -A OV2RAYUDP -p udp -j MARK --set-mark 1
+iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
+
+xray run -c ~/chaiNS/tconfig.json
+
+    # Добавьте здесь код основного функционала
+}
+
+# Проверяем, передан ли аргумент
+if [ $# -gt 0 ]; then
+    # Если передан аргумент, обрабатываем команды
+    handle_commands "$1" || exit 1
+else
+    # Если аргументы не переданы, выполняем основной функционал
+    main_functionality
+fi
