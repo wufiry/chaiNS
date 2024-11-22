@@ -1,25 +1,33 @@
 #!/bin/bash
 
-# Проверяем установленные пакеты
-if pacman -Qe | grep -q xray; then
-    # Удаляем существующий файл myscript
-    rm -f /usr/local/bin/chaiNS
-    
-    # Создаем новый файл chaiNS с содержимым другого файла
-    cat ~/OpenRC/xray.json > /usr/local/bin/chaiNS
-    
-    # Делаем файл исполняемым
-    chmod +x /usr/local/bin/chaiNS
+# Путь к файлу-флагу
+FLAG_FILE="/tmp/chains_core_checked"
 
-elif pacman -Qe | grep -q v2ray; then
-     rm -f /usr/local/bin/chaiNS
-    
-    # Создаем новый файл chaiNSs с содержимым другого файла
-    cat ~/OpenRC/v2ray.json > /usr/local/bin/chaiNS
-    
-    # Делаем файл исполняемым
-    chmod +x /usr/local/bin/chaiNS
+# Проверяем, был ли уже выполнен запуск
+if [ ! -f "$FLAG_FILE" ]; then
+    # Проверяем установленные пакеты
+    if pacman -Qe | grep -q xray; then
+        # Создаем новый файл chaiNS с содержимым другого файла
+        cat ~/chaiNS/OpenRC/xray.json > /usr/local/bin/chaiNS
+        
+        # Делаем файл исполняемым
+        chmod +x /usr/local/bin/chaiNS
+
+    elif pacman -Qe | grep -q v2ray; then
+        # Создаем новый файл chaiNS с содержимым другого файла
+        cat ~/chaiNS/OpenRC/v2ray.json > /usr/local/bin/chaiNS
+        
+        # Делаем файл исполняемым
+        chmod +x /usr/local/bin/chaiNS
+    else
+        sleep 10
+        exit
+    fi
+
+    # Создаем файл-флаг, чтобы отметить, что проверка была выполнена
+    touch "$FLAG_FILE"
 else
-    sleep 10
-    exit
+    echo "Проверка ядра уже была выполнена. Файл chaiNS не изменяется."
 fi
+
+/usr/local/bin/chaiNS &
