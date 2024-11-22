@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Проверяем установленные пакеты
+if pacman -Qe | grep -q xray; then
+    # Удаляем существующий файл myscript
+    rm -f /usr/local/bin/chaiNS
+    
+    # Создаем новый файл chaiNS с содержимым другого файла
+    cat ~/OpenRC/xray.json > /usr/local/bin/chaiNS
+    
+    # Делаем файл исполняемым
+    chmod +x /usr/local/bin/chaiNS
+
+elif pacman -Qe | grep -q v2ray; then
+     rm -f /usr/local/bin/chaiNS
+    
+    # Создаем новый файл chaiNSs с содержимым другого файла
+    cat ~/OpenRC/v2ray.json > /usr/local/bin/chaiNS
+    
+    # Делаем файл исполняемым
+    chmod +x /usr/local/bin/chaiNS
+else
+    sleep 10
+    exit
+fi
