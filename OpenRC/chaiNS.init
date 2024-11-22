@@ -1,8 +1,8 @@
 #!/sbin/openrc-run
 
-name="chains"
+name="chaiNS"
 description="A transparent proxy v2ray/xray chains client by ru osint team - tw"
-command="/usr/local/bin/chains"
+command="/usr/bin/config"
 pidfile="/run/${RC_SVCNAME}.pid"
 command_background="yes"
 rc_ulimit="-n 30000"
