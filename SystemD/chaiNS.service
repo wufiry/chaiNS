@@ -9,7 +9,7 @@ Type=simple
 User=root
 LimitNPROC=500
 LimitNOFILE=1000000
-ExecStart=/usr/local/bin/chains
+ExecStart=/usr/bin/chains
 Restart=on-failure
 
 [Install]
