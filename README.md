@@ -4,31 +4,65 @@
 chaiNS is a V2Ray && XRay client supporting global transparent proxy on Linux and  it is compatible with Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
 ## Download
-### OpenRC
-> [chaiNS](https://github.com/wufiry/chains/blob/main/OpenRC/chaiNS "Programm File")
->> The chaiNS file needs to be copied to
-```sh
-/usr/local/bin \
-/usr/bin
-```
-``
-cp ~/Downloads/chaiNS /usr/local/bin 
+<details>
+
+<summary>OpenRC</summary>
+
+1. #### Cloning repository
+
+> `
+git clone https://github.com/wufiry/chaiNS.git
+`
+
+2. #### Change the current directory
+
+> `
+cd ~/chaiNS/OpenRC
+`
+
+3. #### The file `chains` needs to be copied to ` /usr/bin `
+> ``
+cp ~/OpenRC/chains /usr/bin 
 ``
 
-After that, you need to create a folder in ~/ where the file will be transported [tconfig.json](https://github.com/wufiry/chains/blob/main/OpenRC/tconfig.json "Config v2ray & xray core")
-### SystemD
+
+</details>
+<details>
+
+<summary>SystemD</summary>
+
+1. #### Cloning repository
+
+> `
+git clone https://github.com/wufiry/chaiNS.git
+`
+
+2. #### Change the current directory
+> `
+cd ~/chaiNS/SystemD
+`
+
+</details>
 
 ## Daemons
-### Tested on ArtixLinux OpenRC & ArchLinux SystemD
-### OpenRC 
-> chaiNS.init
-> > You must remove the OpenRC service file extension.
+<details>
+
+<summary>OpenRC</summary>
+
+### ~/chaiNS/OpenRC/chaiNS.init
+
+#### It is necessary to remove the file extension of the OpenRC service.
+
+#### It is necessary to copy the service file to the directory `` /etc/init.d/ ``
+
+> ` cp chaiNS /etc/init.d `
+
 ```sh
 #!/sbin/openrc-run
 
 name="chaiNS"
 description="A transparent proxy v2ray/xray chains client by ru osint team - tw"
-command="/usr/local/bin/chaiNS"
+command="/usr/bin/chains"
 pidfile="/run/${RC_SVCNAME}.pid"
 command_background="yes"
 rc_ulimit="-n 30000"
@@ -39,12 +73,21 @@ rc_cgroup_cleanup="yes"
 	after net
    }
 ```
+#### After copy service file, the next commands must be executed
+
 ```sh
 chmod +x chaiNS
 rc-update add chaiNS default
 ```
-### SystemD
-> chaiNS.service
+</details>
+
+<details>
+
+<summary>SystemD</summary>
+
+### ~/chaiNS/SystemD/chaiNS.service
+> Needed copy service file to
+
 ```sh
 [Unit]
 Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
@@ -57,17 +100,37 @@ Type=simple
 User=root
 LimitNPROC=500
 LimitNOFILE=1000000
-ExecStart=/usr/local/bin/chaiNS
+ExecStart=/usr/bin/chains
 Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
 ```
 ```sh
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
-# Configuration chaiNS
+</details>
+
+#### Tested on ArtixLinux OpenRC & ArchLinux SystemD
+
+## Configuration chaiNS
+
+<details>
+
+<summary>V2Ray</summary>
+
 [V2Ray Configuration Guide](https://v2ray.com/en/configuration/protocols "Choose needed protocol")
 
+</details>
+
+<details>
+
+<summary>XRay</summary>
+
 [XRay Configuration Guide](https://xtls.github.io/en/config/outbounds/blackhole.html "Look for the rest of the protocols in the tree on the left")
+
+</details>
 
 # Donate
 
