@@ -18,15 +18,15 @@
   ],
   "outbounds": [
       {
-    "protocol": "shadowsocks",
+    "protocol": "shadowsocks",  // you can change, check readme.md
       "settings": {
         "servers": [
     {
-            "address": "",
-            "method": "",
+            "address": "123.123.123",
+            "method": "chacha",
             "ota": false,
-            "password": "",
-            "port":
+            "password": "123123",
+            "port": 0099
           }
         ]
       },
@@ -41,16 +41,16 @@
       }
     },
     {
-    "protocol": "socks",
+    "protocol": "socks",  // you can change it, check readme.md
       "settings": {
         "servers": [
           {
-            "address": "",
-            "port": ,
+            "address": "123123",
+            "port": 0099,
             "users": [
               {
-                "user": "", 
-                "pass": ""
+                "user": "vpnsocks", 
+                "pass": "asdasd"
                }
             ]
           }
