@@ -64,7 +64,7 @@ Restart=on-failure
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
-# Configuration chaines
+# Configuration chaiNS
 [V2Ray Configuration Guide](https://v2ray.com/en/configuration/protocols "Choose needed protocol")
 
 [XRay Configuration Guide](https://xtls.github.io/en/config/outbounds/blackhole.html "Look for the rest of the protocols in the tree on the left")
