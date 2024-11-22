@@ -1,72 +1,80 @@
 #!/bin/bash
 
-# Функция для обработки команд
-handle_commands() {
+CONFIG_FILE="$HOME/dns=d"
+
+trap 'echo "Скрипт прерван."; exit 1' SIGINT
+trap 'echo "Скрипт приостановлен."; exit 1' SIGTSTP
+
+update_dns() {
+    [[ -f "$CONFIG_FILE" ]] || { echo "Файл конфигурации не найден: $CONFIG_FILE"; return 1; }
+    sed -i "s/^dns=\".*\"/dns=\"$1\"/" "$CONFIG_FILE" && echo "Значение dns изменено на: $1"
+}
+
+main_functionality() {
+    ip rule add fwmark 1 table 100
+    ip route add local 0.0.0.0/0 dev lo table 100
+
+    iptables -t nat -N V2RAYTCP
+    iptables -t nat -A V2RAYTCP -p tcp -j RETURN -m mark --mark 0xff
+    iptables -t nat -A V2RAYTCP -p tcp -j REDIRECT --to-ports 12345
+    iptables -t nat -A PREROUTING -p tcp -j V2RAYTCP
+    iptables -t nat -A OUTPUT -p tcp -j V2RAYTCP
+
+    iptables -t mangle -N PV2RAYUDP
+    iptables -t mangle -A PV2RAYUDP -j RETURN -m mark --mark 0xff
+    iptables -t mangle -A PV2RAYUDP -d 192.168.0.0/16 -j RETURN
+    iptables -t mangle -A PV2RAYUDP -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
+    iptables -t mangle -A PREROUTING -p udp -j PV2RAYUDP
+
+    iptables -t mangle -N OV2RAYUDP
+    iptables -t mangle -A OV2RAYUDP -j RETURN -m mark --mark 0xff
+    iptables -t mangle -A OV2RAYUDP -d 192.168.0.0/16 -j RETURN
+    iptables -t mangle -A OV2RAYUDP -p udp -j MARK --set-mark 1
+    iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
+
+    xray run -c ~/chains/tconfig.json
+}
+
+if [[ $# -gt 0 ]]; then
     case "$1" in
         -h|--help)
             echo "Доступные команды:"
             echo "  -h, --help       Выводит доступные команды"
-            echo "  -r, --restart    Перезапускает запущенный процесс v2ray или xray"
+            echo "  -r, --restart    Перезапускает v2ray или xray"
+            echo "  -d, --dns        Изменяет значение DNS"
+            exit 0
             ;;
         -r|--restart)
             if pgrep -x "v2ray" > /dev/null; then
                 echo "Перезапуск v2ray..."
-                sudo killall v2ray  # Остановить все запущенные процессы v2ray
-                sleep 1  # Небольшая пауза, чтобы убедиться, что процесс остановлен
-                sudo /usr/local/bin/v2ray -c ~/chains/tconfig.json &  # Запустить v2ray в фоновом режиме
+                sudo killall v2ray
+                sleep 1
+                sudo /usr/local/bin/v2ray -c ~/chains/tconfig.json &
             elif pgrep -x "xray" > /dev/null; then
                 echo "Перезапуск xray..."
-                sudo killall xray  # Остановить все запущенные процессы xray
-                sleep 1  # Небольшая пауза, чтобы убедиться, что процесс остановлен
-                sudo /usr/bin/xray -c ~/chains/tconfig.json &  # Запустить xray в фоновом режиме
+                sudo killall xray
+                sleep 1
+                sudo /usr/bin/xray -c ~/chains/tconfig.json &
             else
                 echo "Ни v2ray, ни xray не запущены."
-                return 1
             fi
+            exit 0
+            ;;
+        -d|--dns)
+            [[ -n "$2" ]] && update_dns "$2" || { echo "Ошибка: Не указано значение для dns."; exit 1; }
+            exit 0
             ;;
         *)
             echo "Неизвестная команда. Используйте -h или --help для получения списка команд."
-            return 1
+            exit 1
             ;;
     esac
-}
-
-
-# Основной функционал
-main_functionality() {
-    # Здесь размещается основной функционал скрипта
-    
-    ip rule add fwmark 1 table 100
-ip route add local 0.0.0.0/0 dev lo table 100
-
-iptables -t nat -N V2RAYTCP
-iptables -t nat -A V2RAYTCP -p tcp -j RETURN -m mark --mark 0xff
-iptables -t nat -A V2RAYTCP -p tcp -j REDIRECT --to-ports 12345
-iptables -t nat -A PREROUTING -p tcp -j V2RAYTCP
-iptables -t nat -A OUTPUT -p tcp -j V2RAYTCP
-
-iptables -t mangle -N PV2RAYUDP
-iptables -t mangle -A PV2RAYUDP -j RETURN -m mark --mark 0xff
-iptables -t mangle -A PV2RAYUDP -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A PV2RAYUDP -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
-iptables -t mangle -A PREROUTING -p udp -j PV2RAYUDP
-
-iptables -t mangle -N OV2RAYUDP
-iptables -t mangle -A OV2RAYUDP -j RETURN -m mark --mark 0xff
-iptables -t mangle -A OV2RAYUDP -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A OV2RAYUDP -p udp -j MARK --set-mark 1
-iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
-
-xray run -c ~/chaiNS/tconfig.json
-
-    # Добавьте здесь код основного функционала
-}
-
-# Проверяем, передан ли аргумент
-if [ $# -gt 0 ]; then
-    # Если передан аргумент, обрабатываем команды
-    handle_commands "$1" || exit 1
-else
-    # Если аргументы не переданы, выполняем основной функционал
-    main_functionality
 fi
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Only root." >&2
+    exit 1
+fi
+
+# Если аргументы не переданы, выполняем основную функциональность
+main_functionality
