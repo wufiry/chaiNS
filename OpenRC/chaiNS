@@ -19,4 +19,4 @@ iptables -t mangle -A OV2RAYUDP -d 192.168.0.0/16 -j RETURN
 iptables -t mangle -A OV2RAYUDP -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -p udp -j OV2RAYUDP
 
-v2ray run -c ~/chains/tconfig.json  // if you want use XRay core change "v2ray" at line to "xray"
+v2ray run -c ~/chains/tconfig.json  # if you want use XRay core change "v2ray" at line to "xray"
