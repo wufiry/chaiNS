@@ -68,7 +68,7 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
-# Конфигурация чейнов
+# Конфигурация chaiNS
 [Документация по конфигурации V2Ray](https://v2ray.com/ru/configuration/protocols "Выберите нужный протокол")
 [Документация по конфигурации XRay](https://xtls.github.io/en/config/outbounds/blackhole.html "Остальные протоколы ищите в дереве слева")
 
