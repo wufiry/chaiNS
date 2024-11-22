@@ -132,6 +132,26 @@ systemctl enable --now chaiNS
 
 </details>
 
+### Commands
+
+<details>
+
+<summary>Commands</summary>
+
+> $ chaiNS -h
+                     
+>> print commands
+                      
+> $ chaiNS --help
+
+> $ chaiNS -r
+                     
+>> restart daemon after change config chaines for use them
+                      
+> $ chaiNS --restart
+
+</details>
+
 # Donate
 
 <p align="center">
