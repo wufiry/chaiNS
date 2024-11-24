@@ -133,7 +133,7 @@ systemctl enable --now chaiNS
 # Donate
 
 <p align="center">
-<img src="https://pngimg.com/uploads/bitcoin/bitcoin_PNG18.png" alt="btc" width="150" height="79"/>
+<img src="https://pngimg.com/uploads/bitcoin/bitcoin_PNG18.png" alt="btc" width="150" height="30"/>
 </p>
 	
  ### `bc1q32rn8p02wrwvhhl25cq0pat23vvh7ezwddezr4`
