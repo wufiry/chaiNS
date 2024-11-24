@@ -124,15 +124,15 @@ systemctl enable --now chaiNS
 
 # Пожертвования
 
+
 <p align="center">
-<img src="https://www.crypto-news.net/wp-content/uploads/2016/09/monero.png" alt="monero" width="150" height="79"/>
+<img src="https://pngimg.com/uploads/bitcoin/bitcoin_PNG18.png" alt="btc" width="150" height="30"/>
 </p>
 	
- ### `46AEKHwWpS8cj1a5Q2sJ1ZSZ4YvmXYTkgEnnsbpeFjQZW8NQSZinASkKNwiBoX4SN3SadYLZjSEbeevnVefe696PEbJv5yU`
+ ### `bc1q32rn8p02wrwvhhl25cq0pat23vvh7ezwddezr4`
 
  <p align="center">
  <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/litecoin_logo_icon_170221.png" alt="litecoin" width="150" height="79" />
  </p>
 
- ### `LNQHtC6vEdqCzhihtNYBLQjNW27GP4Uo8o`
-
+ ### `LSYm76JtCyrFKjb2RkGyAuJZXUgWCZuXUp`
