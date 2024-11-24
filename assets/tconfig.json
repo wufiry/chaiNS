@@ -1,0 +1,164 @@
+### MOVE THIS FILE TO ~/chaiNS/
+
+{
+  "log": {
+    "access": "",
+    "error": "",
+    "loglevel": "debug"
+  },
+  "inbounds": [
+    {
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy"
+        }
+      }
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 48798,
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true,
+        "ip": "127.0.0.1"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "entry",
+      "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+          {
+            "address": "123.123.123.123",
+            "method": "123-123-123",
+            "password": "123123",
+            "port": 123123
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255,
+          "tcpFastOpen": false
+        }
+      },
+      "proxySettings": {
+        "tag": "ss2"
+      }
+    },
+    {
+      "tag": "ss2",
+      "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+          {
+            "address": "123.123.123.123",
+            "method": "123-123-123",
+            "password": "123",
+            "port": 123123
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255,
+          "tcpFastOpen": false
+        }
+      },
+      "proxySettings": {
+        "tag": "fast"
+      }
+    },
+    {
+      "tag": "fast",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "123.123.123.123",
+            "port": 123,
+            "users": [
+              {
+                "id": "123-123-123-123-123",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "123",
+        "security": "123",
+        "tlsSettings": {
+          "allowInsecure": false,
+          "serverName": "123-123.123.123",
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "fingerprint": "chrome"
+        },
+        "wsSettings": {
+          "path": "/lwcdn",
+          "headers": {
+            "Host": "123-123.123.123"
+          }
+        },
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {
+        "port": 53,
+        "address": "123"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "proxySettings": {
+        "tag": "fast"
+      }
+    }
+  ],
+   "dns": {
+    "tag": "dns",
+    "servers": [
+      {
+        "address": "123",
+        "port": 53
+      }
+    ]
+  },
+  "routing": {
+  	"domainMatcher":"mph",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "dns-out",
+        "port": "53"
+      }
+    ]
+  }
+}
