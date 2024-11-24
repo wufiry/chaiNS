@@ -1,4 +1,4 @@
-### THIS FILE MOVE TO ~/chaiNS/
+### MOVE THIS FILE TO ~/chaiNS/
 
 #!/bin/bash
 
@@ -75,12 +75,12 @@ if [[ $# -gt 0 ]]; then
                 echo "Restart v2ray..."
                 sudo killall v2ray
                 sleep 1
-                sudo /usr/local/bin/v2ray -c ~/chains/tconfig.json &
+                sudo /usr/local/bin/v2ray -c ~/chaiNS/tconfig.json &
             elif pgrep -x "xray" > /dev/null; then
                 echo "Restart xray..."
                 sudo killall xray
                 sleep 1
-                sudo /usr/bin/xray -c ~/chains/tconfig.json &
+                sudo /usr/bin/xray -c ~/chaiNS/tconfig.json &
             else
                 echo "Neither v2ray nor xray is running."
             fi
