@@ -33,7 +33,9 @@ cp ~/chaiNS/assets/chains /usr/bin/
    
    > tconfig.json
 
-6. #### Create the daemon and reboot
+6. #### Change the `~/` in [xray.json](https://github.com/wufiry/chaiNS/blob/main/assets/xray.json) && [v2ray.json](https://github.com/wufiry/chaiNS/blob/main/assets/v2ray.json) on line `90` to your home directory.
+
+7. #### Create the daemon and reboot
 	### Info:
 	#### 1. You must configure the “outbounds” yourself in the tconfig.json file
 	#### 2. The first run following the instructions with the daemon will not start the proxy, you will have to second reboot
