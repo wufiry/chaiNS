@@ -37,7 +37,7 @@ cp ~/chaiNS/assets/chains /usr/bin/
 	### Info:
 	#### 1. You must configure the “outbounds” yourself in the tconfig.json file
 	#### 2. The first run following the instructions with the daemon will not start the proxy, you will have to second reboot
-	#### 3. The program has commands. 
+	#### 3. The chaiNS has commands. 
 		
   	#### More info: ` $ chaiNS --help `
 
@@ -47,8 +47,8 @@ cp ~/chaiNS/assets/chains /usr/bin/
 <summary>OpenRC</summary>
 
 ### ~/chaiNS/daemons/openrc
-
-#### It is necessary to copy the service file to the directory `` /etc/init.d/ ``
+#### Rename the file to chaiNS
+> The service file should be copied to ``/etc/init.d``.
 
 ```sh
 #!/sbin/openrc-run
