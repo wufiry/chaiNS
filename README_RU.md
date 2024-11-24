@@ -4,60 +4,51 @@
 chaiNS - это клиент V2Ray & XRay, поддерживающий глобальный Transparent Proxy на Linux и совместимый с протоколами Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
 ## Установка
-<details>
-
-<summary>OpenRC</summary>
 
 1. #### Клонирование репозитория
 
-> `
+	> `
 git clone https://github.com/wufiry/chaiNS.git
 `
 
-2. #### Смените текущую директорию
+2. #### Смена текущей директорию
 
-> `
-cd ~/chaiNS/OpenRC
+	> `
+cd ~/chaiNS/assets/
 `
 
-3. #### Файл ` chains ` требуется скопировать в ` /usr/bin `
-> ``
-cp ~/OpenRC/chains /usr/bin 
+3. #### Файл `chains` нужно копировать в директорию ` /usr/bin `
+	> ``
+cp ~/chaiNS/assets/chains /usr/bin/ 
 ``
 
+4. #### Создание директорию с нужными файлами.
+   	Рекомендуется `~/chaiNS`
 
-</details>
-<details>
+5. #### Копирование файлов в ново-созданную директорию.
+	Файлы которые нужно скопировать:
+   > v2ray.json
+   
+   > xray.json
+   
+   > tconfig.json
 
-<summary>SystemD</summary>
-
-1. #### Клонирование репозитория
-
-> `
-git clone https://github.com/wufiry/chaiNS.git
-`
-
-2. #### Смените текущую директорию
-
-> `
-cd ~/chaiNS/SystemD
-`
-
-</details>
+6. #### Создайте сервис (демон) по гайду далее и перезагружайте компьютер.
+	### Информация:
+	#### 1. Вы должны конфигурировать “outbounds” в файле tconfig.json сами.
+	#### 2. Первый старт по инструкции через сервис (демон) не запускает прокси, вы должны перезагрузить компьютер во второй раз.
+	#### 3. chaiNS имеет функции. 
+		
+  	#### Больше информации о функциях: ` $ chaiNS --help `
 
 ## Daemons
-
 <details>
 
 <summary>OpenRC</summary>
 
-### ~/chaiNS/OpenRC/chaiNS.init
-
-#### Необходимо удалить расширение файла сервиса OpenRC.
-
-#### Необходимо скопировать файл сервиса в директорию `` /etc/init.d/ ``
-
-> ` cp chaiNS /etc/init.d `
+### ~/chaiNS/daemons/openrc
+#### Переименуйте файл на chaiNS
+> Файл сервиса нужно копировать в ``/etc/init.d``
 
 ```sh
 #!/sbin/openrc-run
@@ -75,7 +66,7 @@ rc_cgroup_cleanup="yes"
 	after net
    }
 ```
-#### После копирования, требуется выполнить следующие команды:
+#### После копирования, нужно выполнить следующие команды:
 
 ```sh
 chmod +x chaiNS
@@ -87,14 +78,15 @@ rc-update add chaiNS default
 
 <summary>SystemD</summary>
 
-### ~/chaiNS/SystemD/chaiNS.service
-> Необходимо скопировать файл сервиса
+#### ~/chaiNS/daemons/systemd.service
+#### Переименуйте файл на chaiNS.service
+> Файл сервиса нужно копировать в ``/etc/systemd/system/``
 
 ```sh
 [Unit]
-Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
+Description=A transparent proxt v2ray&xray chains client
 Documentation=https://github.com/wufiry/chaiNS
-After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service
+After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service xray.ser>
 Wants=network.target
 
 [Service]
@@ -108,29 +100,23 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
+#### После копирования, выполните следующие команды:
+
 ```sh
 systemctl daemon-reload
 systemctl enable --now chaiNS
 ```
 </details>
 
-#### Протестировано на ArtixLinux OpenRC & ArchLinux SystemD
+#### Тестировано на ArtixLinux c OpenRC и ArchLinux c SystemD.
 
-## Конфигурация chaiNS
+## Конфигурация '' outbounds ''
 
 <details>
 
 <summary>V2Ray</summary>
 
-[Документация по конфигурации V2Ray](https://v2ray.com/ru/configuration/protocols "Выберите нужный протокол")
-
-</details>
-
-<details>
-
-<summary>XRay</summary>
-
-[Документация по конфигурации XRay](https://xtls.github.io/en/config/outbounds/blackhole.html "Остальные протоколы ищите в дереве слева")
+[Гайд](https://v2ray.com/en/configuration/protocols "Choose needed protocol")
 
 </details>
 
