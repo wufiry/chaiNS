@@ -46,7 +46,7 @@ cp ~/chaiNS/assets/chains /usr/bin/
 
 <summary>OpenRC</summary>
 
-### ~/chaiNS/OpenRC/chaiNS.init
+### ~/chaiNS/daemons/openrc
 
 #### It is necessary to copy the service file to the directory `` /etc/init.d/ ``
 
