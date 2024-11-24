@@ -1,8 +1,47 @@
-### MOVE THIS FILE TO ~/chaiNS/
-
 #!/bin/bash
 
-trap 'echo "Exit..."; exit 1' SIGINT
+trap 'echo "Turn off..."; exit 1' SIGINT
+
+get_package_manager() {
+    if [[ -f /etc/debian_version ]]; then
+        echo "apt"
+    elif [[ -f /etc/redhat-release ]]; then
+        echo "dnf"
+    elif [[ -f /etc/SuSE-release ]]; then
+        echo "zypper"
+    elif [[ -f /etc/arch-release ]]; then
+        echo "pacman"
+    else
+        echo "unsupported"
+    fi
+}
+
+check_installed() {
+    local package_manager=$(get_package_manager)
+    case "$package_manager" in
+        "apt")
+            dpkg -l | grep -q "$1"
+            ;;
+        "dnf")
+            dnf list installed "$1" &>/dev/null
+            ;;
+        "yum")
+            yum list installed "$1" &>/dev/null
+            ;;
+        "zypper")
+            zypper se --installed-only "$1" &>/dev/null
+            ;;
+        "pacman")
+            pacman -Qe "$1" &>/dev/null
+            ;;
+        *)
+            echo "Unsupported distribution."
+            return 1
+            ;;
+    esac
+    return $?
+}
+
 
 main_functionality() {
    
@@ -48,42 +87,66 @@ iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j V2RAY_MASK
 
-v2ray run -c ~/chaiNS/tconfig.json ## Change ~/ to your home directory
+v2ray run -c ~/chaiNS/tconfig.json   # change ~/ to ur home dir
 
 }
 
 shutdown_functionality() {
     sudo ip rule del fwmark 1 table 100
     sudo ip route del local 0.0.0.0/0 dev lo table 100
-    sudo pkill xray
-    sudo pkill v2ray
     sudo systemctl restart iptables
-    echo "Turning off chaiNS..."
+    echo "chaiNS turns off..."
 }
+
+restart_core_functionality() {
+    local default_config_path="~/chaiNS/tconfig.json"
+
+    if [[ -z "$1" ]]; then
+        echo "Using default config path: $default_config_path"
+        config_path="$default_config_path"
+    else
+        config_path="$1"
+    fi
+
+    config_path="${config_path/#\~/$HOME}"
+
+    if [[ ! -f "$config_path" ]]; then
+        echo "Configuration file not found: $config_path" >&2
+        exit 1
+    fi
+
+    if check_installed "v2ray" && pgrep -x "v2ray" > /dev/null; then
+        echo "Restarting v2ray with the default config..."
+        sudo killall asd1
+        sleep 1
+        sudo /usr/local/bin/asd1 -c "$config_path" &
+        return
+    fi
+
+    if check_installed "xray" && pgrep -x "xray" > /dev/null; then
+        echo "Restarting xray with the new config..."
+        sudo killall asd1
+        sleep 1
+        sudo /usr/bin/asd1 -c "$config_path" &
+        return
+    fi
+
+    echo "Neither v2ray nor xray is running." >&2
+    exit 1
+}
+
 
 if [[ $# -gt 0 ]]; then
     case "$1" in
         -h|--help)
             echo "Available commands:"
             echo "  -h, --help       Print available commands"
-            echo "  -r, --restart    Restarts v2ray or xray, depending on the one used"
             echo "  -e, --off        Turns off chaiNS"
+            echo "  -rc, --restart-core <path>  Restarts v2ray or xray with default config file or the specified config file"
             exit 0
             ;;
-        -r|--restart)
-            if pgrep -x "v2ray" > /dev/null; then
-                echo "Restart v2ray..."
-                sudo killall v2ray
-                sleep 1
-                sudo /usr/local/bin/v2ray -c ~/chaiNS/tconfig.json &
-            elif pgrep -x "xray" > /dev/null; then
-                echo "Restart xray..."
-                sudo killall xray
-                sleep 1
-                sudo /usr/bin/xray -c ~/chaiNS/tconfig.json &
-            else
-                echo "Neither v2ray nor xray is running."
-            fi
+        -rc|--restart-core)
+            restart_core_functionality "$2"
             exit 0
             ;;
         -e|--off)
