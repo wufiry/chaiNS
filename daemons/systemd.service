@@ -1,0 +1,16 @@
+[Unit]
+Description=A transparent proxt v2ray&xray chains client
+Documentation=https://github.com/wufiry/chaiNS
+After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service xray.ser>
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+LimitNPROC=500
+LimitNOFILE=1000000
+ExecStart=/usr/bin/chains
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
