@@ -1,0 +1,105 @@
+### THIS FILE MOVE TO ~/chaiNS/
+
+#!/bin/bash
+
+trap 'echo "Exit..."; exit 1' SIGINT
+
+main_functionality() {
+   
+ip rule add fwmark 1 table 100
+ip route add local 0.0.0.0/0 dev lo table 100
+
+iptables -t mangle -N V2RAY
+
+iptables -t mangle -A V2RAY -d 0.0.0.0/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 10.0.0.0/8 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 100.64.0.0/10 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 127.0.0.1/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 169.254.0.0/16 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 172.16.0.0/12 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 192.168.0.0/16 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 224.0.0.0/4 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 240.0.0.0/4 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 255.255.255.255/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+
+iptables -t mangle -A V2RAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A V2RAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A PREROUTING -j V2RAY
+
+###
+
+iptables -t mangle -N V2RAY_MASK
+
+iptables -t mangle -A V2RAY_MASK -d 0.0.0.0/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 10.0.0.0/8 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 100.64.0.0/10 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 127.0.0.1/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 169.254.0.0/16 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 172.16.0.0/12 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 192.168.0.0/16 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 224.0.0.0/4 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 240.0.0.0/4 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 255.255.255.255/32 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+
+iptables -t mangle -A V2RAY_MASK -j RETURN -m mark --mark 0xff
+iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
+iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
+iptables -t mangle -A OUTPUT -j V2RAY_MASK
+
+v2ray run -c ~/chaiNS/tconfig.json
+
+}
+
+shutdown_functionality() {
+    sudo ip rule del fwmark 1 table 100
+    sudo ip route del local 0.0.0.0/0 dev lo table 100
+    sudo pkill xray
+    sudo pkill v2ray
+    sudo systemctl restart iptables
+    echo "Turning off chaiNS..."
+}
+
+if [[ $# -gt 0 ]]; then
+    case "$1" in
+        -h|--help)
+            echo "Available commands:"
+            echo "  -h, --help       Print available commands"
+            echo "  -r, --restart    Restarts v2ray or xray, depending on the one used"
+            echo "  -e, --off        Turns off chaiNS"
+            exit 0
+            ;;
+        -r|--restart)
+            if pgrep -x "v2ray" > /dev/null; then
+                echo "Restart v2ray..."
+                sudo killall v2ray
+                sleep 1
+                sudo /usr/local/bin/v2ray -c ~/chains/tconfig.json &
+            elif pgrep -x "xray" > /dev/null; then
+                echo "Restart xray..."
+                sudo killall xray
+                sleep 1
+                sudo /usr/bin/xray -c ~/chains/tconfig.json &
+            else
+                echo "Neither v2ray nor xray is running."
+            fi
+            exit 0
+            ;;
+        -e|--off)
+            shutdown_functionality
+            exit 0
+            ;;
+        *)
+            echo "Unknown command. Use -h or --help for a list of commands."
+            exit 1
+            ;;
+    esac
+fi
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Only root. Alternative functionality - ' chaiNS --help ' " >&2
+    exit 1
+fi
+
+main_functionality
