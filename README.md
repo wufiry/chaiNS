@@ -4,45 +4,42 @@
 chaiNS is a V2Ray && XRay client supporting global transparent proxy on Linux and  it is compatible with Blackhole, Dokodemo-door, Freedom, HTTP, MTProto, Shadowsocks, Socks, VMess.
 
 ## Download
-<details>
-
-<summary>OpenRC</summary>
 
 1. #### Cloning repository
 
-> `
+	> `
 git clone https://github.com/wufiry/chaiNS.git
 `
 
 2. #### Change the current directory
 
-> `
-cd ~/chaiNS/OpenRC
+	> `
+cd ~/chaiNS/assets/
 `
 
 3. #### The file `chains` needs to be copied to ` /usr/bin `
-> ``
-cp ~/OpenRC/chains /usr/bin 
+	> ``
+cp ~/chaiNS/assets/chains /usr/bin/ 
 ``
 
+4. #### Create the config directory.
+	Recommended name and location `~/chaiNS`
 
-</details>
-<details>
+5. #### Copying files to a newly created directory.
+	Files:
+   > v2ray.json
+   
+   > xray.json
+   
+   > tconfig.json
 
-<summary>SystemD</summary>
-
-1. #### Cloning repository
-
-> `
-git clone https://github.com/wufiry/chaiNS.git
-`
-
-2. #### Change the current directory
-> `
-cd ~/chaiNS/SystemD
-`
-
-</details>
+6. #### Create the daemon and reboot
+	### Info:
+	#### 1. You must configure the “outbounds” yourself in the tconfig.json file
+	#### 2. The first run following the instructions with the daemon will not start the proxy, you will have to second reboot
+	#### 3. The program has commands. 
+		
+  	#### More info: ` $ chaiNS --help `
 
 ## Daemons
 <details>
@@ -51,11 +48,7 @@ cd ~/chaiNS/SystemD
 
 ### ~/chaiNS/OpenRC/chaiNS.init
 
-#### It is necessary to remove the file extension of the OpenRC service.
-
 #### It is necessary to copy the service file to the directory `` /etc/init.d/ ``
-
-> ` cp chaiNS /etc/init.d `
 
 ```sh
 #!/sbin/openrc-run
@@ -85,14 +78,15 @@ rc-update add chaiNS default
 
 <summary>SystemD</summary>
 
-### ~/chaiNS/SystemD/chaiNS.service
-> Needed copy service file to
+#### ~/chaiNS/daemons/systemd.service
+#### Rename the service to chaiNS.service
+> Needed copy service file to ``/etc/systemd/system/``
 
 ```sh
 [Unit]
-Description=A transparent proxy v2ray/xray chains client by ru osint team - tw
+Description=A transparent proxt v2ray&xray chains client
 Documentation=https://github.com/wufiry/chaiNS
-After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service
+After=network.target nss-lookup.target iptables.service ip6tables.service nftables.service xray.ser>
 Wants=network.target
 
 [Service]
@@ -106,6 +100,8 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
+#### After copy service file, the next commands must be executed
+
 ```sh
 systemctl daemon-reload
 systemctl enable --now chaiNS
@@ -114,7 +110,7 @@ systemctl enable --now chaiNS
 
 #### Tested on ArtixLinux OpenRC & ArchLinux SystemD
 
-## Configuration chaiNS
+## Configuration '' outbounds ''
 
 <details>
 
@@ -129,26 +125,6 @@ systemctl enable --now chaiNS
 <summary>XRay</summary>
 
 [XRay Configuration Guide](https://xtls.github.io/en/config/outbounds/blackhole.html "Look for the rest of the protocols in the tree on the left")
-
-</details>
-
-### Commands
-
-<details>
-
-<summary>Commands</summary>
-
-> $ chaiNS -h
-                     
->> print commands
-                      
-> $ chaiNS --help
-
-> $ chaiNS -r
-                     
->> restart daemon after change config chaines for use them
-                      
-> $ chaiNS --restart
 
 </details>
 
