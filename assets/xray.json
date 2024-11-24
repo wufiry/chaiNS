@@ -42,6 +42,34 @@ check_installed() {
     return $?
 }
 
+change_core_functionality() {
+    local default_config_path="~/chaiNS/tconfig.json"
+    local config_path="${1:-$default_config_path}"
+
+    config_path="${config_path/#\~/$HOME}"
+
+    if [[ ! -f "$config_path" ]]; then
+        echo "Configuration file not found: $config_path" >&2
+        exit 1
+    fi
+
+    if pgrep -x "xray" > /dev/null; then
+        echo "Stopping xray..."
+        sudo killall xray
+        sleep 1
+        echo "Starting v2ray with the config..."
+        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
+    elif pgrep -x "v2ray" > /dev/null; then
+        echo "Stopping v2ray..."
+        sudo killall v2ray
+        sleep 1
+        echo "Starting xray with the config..."
+        nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
+    else
+        echo "Neither v2ray nor xray is running." >&2
+        exit 1
+    fi
+}
 
 main_functionality() {
    
@@ -117,17 +145,17 @@ restart_core_functionality() {
 
     if check_installed "v2ray" && pgrep -x "v2ray" > /dev/null; then
         echo "Restarting v2ray with the default config..."
-        sudo killall asd1
+        sudo killall v2ray
         sleep 1
-        sudo /usr/local/bin/asd1 -c "$config_path" &
+        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
         return
     fi
 
     if check_installed "xray" && pgrep -x "xray" > /dev/null; then
         echo "Restarting xray with the new config..."
-        sudo killall asd1
+        sudo killall xray
         sleep 1
-        sudo /usr/bin/asd1 -c "$config_path" &
+        nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
         return
     fi
 
@@ -142,11 +170,16 @@ if [[ $# -gt 0 ]]; then
             echo "Available commands:"
             echo "  -h, --help       Print available commands"
             echo "  -e, --off        Turns off chaiNS"
-            echo "  -rc, --restart-core <path>  Restarts v2ray or xray with default config file or the specified config file"
+            echo "  -rc, --restart-core <path>  Restarts v2ray or xray with the specified config file"
+	    echo "  -Cc, --change-core <path>    Changes the core from v2ray to xray or vice versa"
             exit 0
             ;;
         -rc|--restart-core)
             restart_core_functionality "$2"
+            exit 0
+            ;;
+        -Cc|--change-core)
+            change_core_functionality "$2"
             exit 0
             ;;
         -e|--off)
