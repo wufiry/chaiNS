@@ -1,33 +1,64 @@
 ### THIS FILE MOVE TO /usr/bin/
 
-!/bin/bash
+#!/bin/bash
 
 FLAG_FILE="/tmp/chains_core_checked"
 TARGET_FILE="/usr/local/bin/chaiNS"
+
+get_package_manager() {
+    if [[ -f /etc/debian_version ]]; then
+        echo "apt"
+    elif [[ -f /etc/redhat-release ]]; then
+        echo "dnf"
+    elif [[ -f /etc/SuSE-release ]]; then
+        echo "zypper"
+    elif [[ -f /etc/arch-release ]]; then
+        echo "pacman"
+    else
+        echo "unsupported"
+    fi
+}
+
+check_installed() {
+    local package_manager=$(get_package_manager)
+    case "$package_manager" in
+        "apt")
+            dpkg -l | grep -q "$1"
+            ;;
+        "dnf")
+            dnf list installed "$1" &>/dev/null
+            ;;
+        "yum")
+            yum list installed "$1" &>/dev/null
+            ;;
+        "zypper")
+            zypper se --installed-only "$1" &>/dev/null
+            ;;
+        "pacman")
+            pacman -Qe "$1" &>/dev/null
+            ;;
+        *)
+            echo "Unsupported distribution."
+            return 1
+            ;;
+    esac
+    return $?
+}
 
 if [ -f "$FLAG_FILE" ]; then
     "$TARGET_FILE" &
     exit
 fi
-  
-if pacman -Qe | grep -q v2ray; then
-    if pacman -Qe | grep -q xray; then
-        # Если оба ядра есть, копируем xray
-        cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
-    else
-      
-        cat /home/q/chaiNS/v2ray.json > "$TARGET_FILE"
-    fi
-elif pacman -Qe | grep -q xray; then
-  
-    cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
-else
 
+if check_installed "xray"; then
+    cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
+elif check_installed "v2ray"; then
+    cat /home/q/chaiNS/v2ray.json > "$TARGET_FILE"
+else
     sleep 10
     exit
 fi
 
-# Делаем файл исполняемым
 chmod +x "$TARGET_FILE"
 
 touch "$FLAG_FILE"
