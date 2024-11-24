@@ -48,7 +48,7 @@ iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j V2RAY_MASK
 
-v2ray run -c ~/chaiNS/tconfig.json
+v2ray run -c ~/chaiNS/tconfig.json ## Change ~/ to your home directory
 
 }
 
