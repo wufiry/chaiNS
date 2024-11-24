@@ -1,0 +1,35 @@
+### THIS FILE MOVE TO /usr/bin/
+
+!/bin/bash
+
+FLAG_FILE="/tmp/chains_core_checked"
+TARGET_FILE="/usr/local/bin/chaiNS"
+
+if [ -f "$FLAG_FILE" ]; then
+    "$TARGET_FILE" &
+    exit
+fi
+  
+if pacman -Qe | grep -q v2ray; then
+    if pacman -Qe | grep -q xray; then
+        # Если оба ядра есть, копируем xray
+        cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
+    else
+      
+        cat /home/q/chaiNS/v2ray.json > "$TARGET_FILE"
+    fi
+elif pacman -Qe | grep -q xray; then
+  
+    cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
+else
+
+    sleep 10
+    exit
+fi
+
+# Делаем файл исполняемым
+chmod +x "$TARGET_FILE"
+
+touch "$FLAG_FILE"
+
+"$TARGET_FILE" &
