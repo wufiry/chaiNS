@@ -51,9 +51,9 @@ if [ -f "$FLAG_FILE" ]; then
 fi
 
 if check_installed "xray"; then
-    cat /home/q/chaiNS/xray.json > "$TARGET_FILE"
+    cat ~/chaiNS/xray.json > "$TARGET_FILE"
 elif check_installed "v2ray"; then
-    cat /home/q/chaiNS/v2ray.json > "$TARGET_FILE"
+    cat ~/chaiNS/v2ray.json > "$TARGET_FILE"
 else
     sleep 10
     exit
