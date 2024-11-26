@@ -1,75 +1,7 @@
 #!/bin/bash
 
-trap 'echo "Turn off..."; exit 1' SIGINT
-
-get_package_manager() {
-    if [[ -f /etc/debian_version ]]; then
-        echo "apt"
-    elif [[ -f /etc/redhat-release ]]; then
-        echo "dnf"
-    elif [[ -f /etc/SuSE-release ]]; then
-        echo "zypper"
-    elif [[ -f /etc/arch-release ]]; then
-        echo "pacman"
-    else
-        echo "unsupported"
-    fi
-}
-
-check_installed() {
-    local package_manager=$(get_package_manager)
-    case "$package_manager" in
-        "apt")
-            dpkg -l | grep -q "$1"
-            ;;
-        "dnf")
-            dnf list installed "$1" &>/dev/null
-            ;;
-        "yum")
-            yum list installed "$1" &>/dev/null
-            ;;
-        "zypper")
-            zypper se --installed-only "$1" &>/dev/null
-            ;;
-        "pacman")
-            pacman -Qe "$1" &>/dev/null
-            ;;
-        *)
-            echo "Unsupported distribution."
-            return 1
-            ;;
-    esac
-    return $?
-}
-
-change_core_functionality() {
-    local default_config_path="~/chaiNS/tconfig.json"
-    local config_path="${1:-$default_config_path}"
-
-    config_path="${config_path/#\~/$HOME}"
-
-    if [[ ! -f "$config_path" ]]; then
-        echo "Configuration file not found: $config_path" >&2
-        exit 1
-    fi
-
-    if pgrep -x "xray" > /dev/null; then
-        echo "Stopping xray..."
-        sudo killall xray
-        sleep 1
-        echo "Starting v2ray with the config..."
-        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
-    elif pgrep -x "v2ray" > /dev/null; then
-        echo "Stopping v2ray..."
-        sudo killall v2ray
-        sleep 1
-        echo "Starting xray with the config..."
-        nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
-    else
-        echo "Neither v2ray nor xray is running." >&2
-        exit 1
-    fi
-}
+USER_HOME="$HOME"
+default_config_path="$USER_HOME/chaiNS/tconfig.json"
 
 main_functionality() {
    
@@ -115,54 +47,61 @@ iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j V2RAY_MASK
 
-v2ray run -c ~/chaiNS/tconfig.json   # change ~/ to ur home dir
+v2ray run -c $default_config_path
 
 }
 
-shutdown_functionality() {
+shutdown() {
     sudo ip rule del fwmark 1 table 100
     sudo ip route del local 0.0.0.0/0 dev lo table 100
     sudo systemctl restart iptables
     echo "chaiNS turns off..."
 }
 
-restart_core_functionality() {
-    local default_config_path="~/chaiNS/tconfig.json"
+restart_core() {
+    local config_path
+    config_path="${1:-$default_config_path}"
+  
+    echo "Using config: $config_path" 
 
-    if [[ -z "$1" ]]; then
-        echo "Using default config path: $default_config_path"
-        config_path="$default_config_path"
-    else
-        config_path="$1"
-    fi
-
-    config_path="${config_path/#\~/$HOME}"
-
-    if [[ ! -f "$config_path" ]]; then
-        echo "Configuration file not found: $config_path" >&2
-        exit 1
-    fi
-
-    if check_installed "v2ray" && pgrep -x "v2ray" > /dev/null; then
-        echo "Restarting v2ray with the default config..."
-        sudo killall v2ray
-        sleep 1
-        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
-        return
-    fi
-
-    if check_installed "xray" && pgrep -x "xray" > /dev/null; then
-        echo "Restarting xray with the new config..."
+    if pgrep -x "xray" > /dev/null; then
+        echo "Restarting xray..."
         sudo killall xray
         sleep 1
         nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
-        return
+    elif pgrep -x "v2ray" > /dev/null; then
+        echo "Restarting v2ray..."
+        sudo killall v2ray
+        sleep 1
+        nohup sudo /usr/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
+    else
+        echo "Neither xray nor v2ray is running."
     fi
-
-    echo "Neither v2ray nor xray is running." >&2
-    exit 1
 }
 
+change_core() {
+    local config_path
+    config_path="${1:-$default_config_path}"
+  
+    echo "Using config: $config_path" 
+
+    if pgrep -x "xray" > /dev/null; then
+        echo "Stopping xray..."
+        sudo killall xray
+        sleep 1
+        echo "Starting v2ray"
+        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
+    elif pgrep -x "v2ray" > /dev/null; then
+        echo "Stopping v2ray..."
+        sudo killall v2ray
+        sleep 1
+        echo "Starting xray"
+        nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
+    else
+        echo "Neither v2ray nor xray is running." >&2
+        exit 1
+    fi
+}
 
 if [[ $# -gt 0 ]]; then
     case "$1" in
@@ -170,20 +109,20 @@ if [[ $# -gt 0 ]]; then
             echo "Available commands:"
             echo "  -h, --help       Print available commands"
             echo "  -e, --off        Turns off chaiNS"
-            echo "  -rc, --restart-core <path>  Restarts v2ray or xray with the specified config file"
-	    echo "  -Cc, --change-core <path>    Changes the core from v2ray to xray or vice versa"
+            echo "  -r, --restart-core <path>  Restarts v2ray or xray with the specified config file"
+	    echo "  -c, --change-core <path>    Changes the core from v2ray to xray or vice versa"
             exit 0
             ;;
-        -rc|--restart-core)
-            restart_core_functionality "$2"
+        -r|--restart-core)
+            restart_core "$2"
             exit 0
             ;;
-        -Cc|--change-core)
-            change_core_functionality "$2"
+        -c|--change-core)
+            change_core "$2"
             exit 0
             ;;
         -e|--off)
-            shutdown_functionality
+            shutdown
             exit 0
             ;;
         *)
