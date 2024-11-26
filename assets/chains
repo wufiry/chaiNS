@@ -1,59 +1,27 @@
-### THIS FILE MOVE TO /usr/bin/
-
 #!/bin/bash
 
-FLAG_FILE="/tmp/chains_core_checked"
+USER_HOME="$HOME"
 TARGET_FILE="/usr/local/bin/chaiNS"
 
-get_package_manager() {
-    if [[ -f /etc/debian_version ]]; then
-        echo "apt"
-    elif [[ -f /etc/redhat-release ]]; then
-        echo "dnf"
-    elif [[ -f /etc/SuSE-release ]]; then
-        echo "zypper"
-    elif [[ -f /etc/arch-release ]]; then
-        echo "pacman"
+get_package() {
+    if [[ -f /usr/bin/xray ]]; then
+        echo "xray"
+    elif [[ -f /usr/bin/v2ray ]]; then
+        echo "v2ray"
     else
         echo "unsupported"
     fi
 }
 
-check_installed() {
-    local package_manager=$(get_package_manager)
-    case "$package_manager" in
-        "apt")
-            dpkg -l | grep -q "$1"
-            ;;
-        "dnf")
-            dnf list installed "$1" &>/dev/null
-            ;;
-        "yum")
-            yum list installed "$1" &>/dev/null
-            ;;
-        "zypper")
-            zypper se --installed-only "$1" &>/dev/null
-            ;;
-        "pacman")
-            pacman -Qe "$1" &>/dev/null
-            ;;
-        *)
-            echo "Unsupported distribution."
-            return 1
-            ;;
-    esac
-    return $?
-}
-
-if [ -f "$FLAG_FILE" ]; then
-    "$TARGET_FILE" &
+if [ -f /usr/local/bin/chaiNS ]; then
+    /usr/local/bin/chaiNS & 
     exit
 fi
 
-if check_installed "xray"; then
-    cat ~/chaiNS/xray.json > "$TARGET_FILE"
-elif check_installed "v2ray"; then
-    cat ~/chaiNS/v2ray.json > "$TARGET_FILE"
+if get_package "xray"; then
+    cat $USER_HOME/chaiNS/xray.json > "$TARGET_FILE"
+elif get_package "v2ray"; then
+    cat $USER_HOME/chaiNS/v2ray.json > "$TARGET_FILE"
 else
     sleep 10
     exit
@@ -61,6 +29,6 @@ fi
 
 chmod +x "$TARGET_FILE"
 
-touch "$FLAG_FILE"
-
 "$TARGET_FILE" &
+
+exit
