@@ -1,6 +1,7 @@
 #!/bin/bash
 
 USER_HOME="$HOME"
+default_config_path="$USER_HOME/chaiNS/tconfig.json"
 
 main_functionality() {
    
@@ -46,7 +47,7 @@ iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j V2RAY_MASK
 
-xray run -c $USER_HOME/chaiNS/tconfig.json
+xray run -c $default_config_path
 
 }
 
@@ -58,7 +59,6 @@ shutdown() {
 }
 
 restart_core() {
-    local default_config_path="$USER_HOME/chaiNS/tconfig.json"
     local config_path
     config_path="${1:-$default_config_path}"
   
@@ -80,7 +80,6 @@ restart_core() {
 }
 
 change_core() {
-    local default_config_path="$USER_HOME/chaiNS/tconfig.json"
     local config_path
     config_path="${1:-$default_config_path}"
   
@@ -88,16 +87,16 @@ change_core() {
 
     if pgrep -x "xray" > /dev/null; then
         echo "Stopping xray..."
-        sudo killall asdd
+        sudo killall xray
         sleep 1
-        echo "Starting v2ray with the config..."
-        nohup sudo /usr/local/bin/asdd -c "$config_path" > /dev/null 2>&1 &
+        echo "Starting v2ray"
+        nohup sudo /usr/local/bin/v2ray -c "$config_path" > /dev/null 2>&1 &
     elif pgrep -x "v2ray" > /dev/null; then
         echo "Stopping v2ray..."
-        sudo killall asdd
+        sudo killall v2ray
         sleep 1
-        echo "Starting xray with the config..."
-        nohup sudo /usr/bin/asdd -c "$config_path" > /dev/null 2>&1 &
+        echo "Starting xray"
+        nohup sudo /usr/bin/xray -c "$config_path" > /dev/null 2>&1 &
     else
         echo "Neither v2ray nor xray is running." >&2
         exit 1
