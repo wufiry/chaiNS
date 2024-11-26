@@ -142,7 +142,13 @@ main_functionality
 if [[ -f /usr/bin/xray ]]; then
 	xray=$(echo "$run" | sed 's/core/xray/')
 	$xray
+elif if [[ -f /usr/local/bin/xray ]]; then
+	xray=$(echo "$run" | sed 's/core/xray/')
+	$xray
     elif [[ -f /usr/bin/v2ray ]]; then
+    	v2ray=$(echo "$run" | sed 's/core/v2ray/')
+    	$v2ray
+elif [[ -f /usr/local/bin/v2ray ]]; then
     	v2ray=$(echo "$run" | sed 's/core/v2ray/')
     	$v2ray
     else
