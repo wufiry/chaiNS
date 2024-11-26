@@ -57,7 +57,7 @@ cp ~/chaiNS/assets/chains /usr/bin/
 
 name="chaiNS"
 description="A transparent proxy v2ray/xray chains client by ru osint team - tw"
-command="/usr/bin/chains"
+command="/usr/local/bin/chaiNS"
 pidfile="/run/${RC_SVCNAME}.pid"
 command_background="yes"
 rc_ulimit="-n 30000"
@@ -96,7 +96,7 @@ Type=simple
 User=root
 LimitNPROC=500
 LimitNOFILE=1000000
-ExecStart=/usr/bin/chains
+ExecStart=/usr/local/bin/chaiNS
 Restart=on-failure
 
 [Install]
