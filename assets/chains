@@ -14,7 +14,7 @@ get_package() {
 }
 
 if [ -f /usr/local/bin/chaiNS ]; then
-    /usr/local/bin/chaiNS & 
+    "$TARGET_FILE" & 
     exit
 fi
 
