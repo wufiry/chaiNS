@@ -1,10 +1,20 @@
 #!/bin/bash
 
-USER_HOME="$HOME"
-default_config_path="$USER_HOME/chaiNS/tconfig.json"
+USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+default_config="$USER_HOME/chaiNS/tconfig.json"
 
-main_functionality() {
-   
+clean() {
+
+ip rule del fwmark 1 table 100
+ip route del local 0.0.0.0/0 dev lo table 100
+systemctl restart iptables
+
+}
+
+main() {
+
+clean
+
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
 
@@ -47,7 +57,17 @@ iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j V2RAY_MASK
 
-run="core run -c $default_config_path"
+if [[ -f /usr/bin/xray ]]; then
+	/usr/bin/xray run -c $default_config 
+    elif [[ -f /usr/local/bin/xray ]]; then 
+	/usr/local/bin/xray run -c $default_config 
+    elif [[ -f /usr/bin/v2ray ]]; then
+    	/usr/bin/v2ray run -c $default_config 
+    elif [[ -f /usr/local/bin/v2ray ]]; then
+    	/usr/local/bin/v2ray run -c $default_config 
+    else
+        exit 1
+fi
 
 }
 
@@ -59,8 +79,9 @@ shutdown() {
 }
 
 restart_core() {
+    USER_HOME=$HOME
     local config_path
-    config_path="${1:-$default_config_path}"
+    config_path="${1:-$default_config}"
   
     echo "Using config: $config_path" 
 
@@ -80,8 +101,9 @@ restart_core() {
 }
 
 change_core() {
+    USER_HOME=$HOME
     local config_path
-    config_path="${1:-$default_config_path}"
+    config_path="${1:-$default_config}"
   
     echo "Using config: $config_path" 
 
@@ -137,20 +159,4 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-main_functionality
-
-if [[ -f /usr/bin/xray ]]; then
-	xray=$(echo "$run" | sed 's/core/xray/')
-	$xray
-elif if [[ -f /usr/local/bin/xray ]]; then
-	xray=$(echo "$run" | sed 's/core/xray/')
-	$xray
-    elif [[ -f /usr/bin/v2ray ]]; then
-    	v2ray=$(echo "$run" | sed 's/core/v2ray/')
-    	$v2ray
-elif [[ -f /usr/local/bin/v2ray ]]; then
-    	v2ray=$(echo "$run" | sed 's/core/v2ray/')
-    	$v2ray
-    else
-        exit 1
-fi
+main
